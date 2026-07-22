@@ -429,16 +429,31 @@ document.addEventListener('DOMContentLoaded', () => {
     captureBtn.addEventListener('click', () => {
         if (!video.videoWidth) return;
 
-        // Set canvas dimensions to match video
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        // A área de foco (scan-overlay) representa a região central da tela.
+        // O CSS define um recorte de 10% nas bordas (10% a 90%).
+        const cropX = video.videoWidth * 0.1;
+        const cropY = video.videoHeight * 0.1;
+        const cropWidth = video.videoWidth * 0.8;
+        const cropHeight = video.videoHeight * 0.8;
+
+        // Define as dimensões do canvas apenas para a área recortada
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
         
         const context = canvas.getContext('2d');
-        // Draw the current video frame onto the canvas
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
-        // Get the image data URL (JPEG format)
-        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        // Aplica filtros para melhorar a precisão do OCR (Preto e branco, alto contraste)
+        context.filter = 'grayscale(100%) contrast(150%) brightness(110%)';
+
+        // Desenha no canvas apenas a porção central do vídeo (fazendo o recorte)
+        context.drawImage(
+            video, 
+            cropX, cropY, cropWidth, cropHeight, // Coordenadas e tamanho de origem (recorte)
+            0, 0, cropWidth, cropHeight          // Coordenadas e tamanho de destino (canvas)
+        );
+        
+        // Captura a imagem com qualidade alta (0.95)
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.95);
         
         // Process it
         processImage(imageDataUrl);

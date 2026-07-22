@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Tesseract.js -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Tesseract.js (Local) -->
+    <script src="./js/tesseract/tesseract.min.js"></script>
     <style>
 :root {
     --bg-color: #0f172a; /* Slate 900 */
@@ -395,6 +395,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const worker = await Tesseract.createWorker({
+                workerPath: './js/tesseract/worker.min.js',
+                langPath: './js/tesseract',
+                corePath: './js/tesseract/tesseract-core.wasm.js',
                 logger: m => {
                     console.log(m);
                     if (m.status === 'recognizing text') {

@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = '0%';
 
         try {
-            const worker = await Tesseract.createWorker({
+            const worker = await Tesseract.createWorker('por', 1, {
                 workerPath: './js/tesseract/worker.min.js',
                 langPath: './js/tesseract',
                 corePath: './js/tesseract/tesseract-core.wasm.js',
@@ -407,9 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            await worker.loadLanguage('por');
-            await worker.initialize('por');
-            
             loadingText.textContent = 'Processando imagem...';
             
             const { data: { text } } = await worker.recognize(imageDataUrl);
